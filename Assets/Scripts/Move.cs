@@ -8,7 +8,6 @@ public class Move : MonoBehaviour
     public float speedForward = 8f; 
     public float speedRight = 1.0f;
 
-    public int score = 0;
     //private Rigidbody rigidbody;
     private float dirRight;
 
@@ -36,23 +35,8 @@ public class Move : MonoBehaviour
         Vector3 translation = new Vector3(right, 0, speedForward) * Time.fixedDeltaTime;
         transform.Translate(translation);
         if (Math.Abs(transform.position.x) >= groundScale)
-            transform.Translate(-translation);
+            transform.position = new Vector3(transform.position.x - translation.x , transform.position.y , transform.position.z);
     }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if(other.collider.tag == "Zone")
-        {
-            ZoneData data = other.gameObject.GetComponent<ZoneData>();
-            if (data.isTrue)
-            {
-                Debug.Log("Верно");
-            }
-            else
-            {
-                Debug.Log("Верно");
-            }
-            score += data.score;
-        }
-    }
+    
+    
 }

@@ -146,7 +146,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '2 + 10 = 12
+  m_text: '122 + 210 = 112
 
 '
   m_isRightToLeft: 0
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -21.11139, y: 0, z: -0.84809494, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 985931862}
   - component: {fileID: 7909077777400107530}
   m_Layer: 0
-  m_Name: Zone
+  m_Name: True
   m_TagString: Zone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -514,6 +514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a7cec93aa299a418be9c387cfcb889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textEquation: {fileID: 985854226491251948}
+  textRight: {fileID: 0}
+  textWrong: {fileID: 0}
+  scores: {fileID: 4385589201155415546}
   equation: 2+10=12
   isTrue: 1
   score: 2
@@ -528,7 +532,6 @@ GameObject:
   - component: {fileID: 985854227287899173}
   - component: {fileID: 985854227287899162}
   - component: {fileID: 985854227287899163}
-  - component: {fileID: 985854227287899172}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -601,19 +604,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &985854227287899172
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 985854227287899174}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &985854227953115893
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +750,6 @@ GameObject:
   - component: {fileID: 2490586388095363709}
   - component: {fileID: 4135156608586865592}
   - component: {fileID: 7630581170987188582}
-  - component: {fileID: 6882523431293948619}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -833,19 +822,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6882523431293948619
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3006167344697806119}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5503820604751613706
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +834,7 @@ GameObject:
   - component: {fileID: 985854228116131197}
   - component: {fileID: 7774576534017157762}
   m_Layer: 0
-  m_Name: Zone
+  m_Name: False
   m_TagString: Zone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,6 +881,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a7cec93aa299a418be9c387cfcb889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textEquation: {fileID: 985854226491251948}
+  textRight: {fileID: 0}
+  textWrong: {fileID: 0}
+  scores: {fileID: 4385589201155415546}
   equation: 2+10=12
   isTrue: 0
   score: -2
@@ -917,6 +897,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3084704949639329506}
+  - component: {fileID: 3000966115473008353}
   m_Layer: 0
   m_Name: Zones
   m_TagString: Untagged
@@ -942,6 +923,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3000966115473008353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6255013890358498104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50f4b488645ed1b46a3626c8c10717d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equation: 
+  isTrue: 0
+  score: 0
+  trueObject: {fileID: 985854227155381551}
+  falseObject: {fileID: 5503820604751613706}
 --- !u!1 &8520904691201498676
 GameObject:
   m_ObjectHideFlags: 0
@@ -954,7 +952,7 @@ GameObject:
   - component: {fileID: 6537986524392888967}
   - component: {fileID: 4385589201155415546}
   m_Layer: 0
-  m_Name: Equation (1)
+  m_Name: Scores
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1017,8 +1015,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278255530
-  m_fontColor: {r: 0.66659105, g: 1, b: 0, a: 1}
+    rgba: 4288651167
+  m_fontColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
