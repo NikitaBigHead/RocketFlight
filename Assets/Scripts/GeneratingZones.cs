@@ -14,27 +14,33 @@ public class GeneratingZones : MonoBehaviour
     public float distance = 7f;
     public int countZone = 50;
 
-    [Header("Проценты генерации зон и их вероятность правильного ответа")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")]
     [Range(0,100)]   public float percentOfDoubleZone = 50f;
     [Range(0, 100)]  public float percentOfDoubleZoneCorrect = 50f;
     [Range(0, 100)]  public float percentOfZoneCorrect = 50f;
 
-    [Header("Максимальное отклонение уравнения")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     public int MaxOffsetUncorrectEquation = 3;
 
-    [Header("Префабы зон")]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ")]
     public GameObject prefabZone;
     public GameObject prefabDoubleZone;
 
-    [Header("Базовые кординаты расположения зон")]
+    [Header("пїЅпїЅпїЅпїЅпїЅ")]
+    public GameObject finishPrefab;
+
+    [Header("пїЅпїЅпїЅ")]
+    public GameObject plane;
+
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ")]
     public float ZoneCordX = 5f;
     public float ZoneCordY = 2.5f;
 
-    [Header("Файлы с уравнениями")]
+    [Header("пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ")]
     public TextAsset hardEquationsText;
     public TextAsset simpleEquationsText;
 
-    [Header("Очки")]
+    [Header("пїЅпїЅпїЅпїЅ")]
     public int scoreForHard = 1;
     public int scoreForSimple = 1;
 
@@ -62,33 +68,47 @@ public class GeneratingZones : MonoBehaviour
         setDoubleArray(simpleEquations, ref SimpleEquationsWithAnswers);
 
         Vector3 newPos = new Vector3(0,0,0);
+        generateZones(ref newPos);
 
+        newPos.z += distance;
+        Instantiate(finishPrefab,newPos,Quaternion.identity);
+
+        Transform flat = finishPrefab.transform.Find("Flats");
+        float lenZones = flat.childCount * flat.GetChild(0).transform.localScale.z;
+        newPos.z += lenZones;
+
+        plane.transform.localScale = new Vector3(plane.transform.localScale.x, plane.transform.localScale.y, newPos.z  * 5f);
+
+
+    }
+    private void generateZones(ref Vector3 newPos)
+    {
         for (int i = 0; i < countZone; i++)
         {
             bool isDoubleZone = random(percentOfDoubleZone);
-            
 
-            if(isDoubleZone)
+
+            if (isDoubleZone)
             {
-                TransferToZoneData zone = Instantiate(prefabDoubleZone, newPos,Quaternion.identity).GetComponent<TransferToZoneData>();
+                TransferToZoneData zone = Instantiate(prefabDoubleZone, newPos, Quaternion.identity).GetComponent<TransferToZoneData>();
 
                 bool isTrue = random(percentOfDoubleZoneCorrect);
 
                 int index = Random.Range(0, simpleEquations.Count);
 
                 string result = SimpleEquationsWithAnswers[index, 1];
-                if (!isTrue) 
-                    result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString() ;
-                
-                string equation = SimpleEquationsWithAnswers[index, 0]+ " = " + result;
+                if (!isTrue)
+                    result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
 
-                zone.launch(equation,isTrue,scoreForSimple);
+                string equation = SimpleEquationsWithAnswers[index, 0] + " = " + result;
+
+                zone.launch(equation, isTrue, scoreForSimple);
             }
             else
             {
                 bool isRight = random(50f);
-                int oper = isRight? 1 : -1;
-                ZoneData zone = Instantiate(prefabZone, new Vector3(oper * ZoneCordX,ZoneCordY,newPos.z), Quaternion.identity)
+                int oper = isRight ? 1 : -1;
+                ZoneData zone = Instantiate(prefabZone, new Vector3(oper * ZoneCordX, ZoneCordY, newPos.z), Quaternion.identity)
                     .GetComponent<ZoneData>();
 
                 bool isTrue = random(percentOfZoneCorrect);
@@ -98,15 +118,14 @@ public class GeneratingZones : MonoBehaviour
                 if (!isTrue)
                     result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
 
-                string equation = hardEquationsWithAnswers[index, 0]+ " = " + result;
+                string equation = hardEquationsWithAnswers[index, 0] + " = " + result;
 
                 zone.launch(equation, isTrue, scoreForHard);
 
             }
-            
+
             newPos.z += distance;
         }
-
     }
     private void getList(TextAsset EquationsText,ref List<string> equations) {
         string str = EquationsText.ToString();
