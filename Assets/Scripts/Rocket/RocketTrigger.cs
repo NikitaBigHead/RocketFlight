@@ -14,6 +14,11 @@ public class RocketTrigger : MonoBehaviour
     public Material green;
     public float runningTime = 1f;
 
+    [Header("Звуки")]
+    public List<AudioClip> positive;
+    public List<AudioClip> negative;
+    public AudioSource audio;
+
     [Space]
     private List<bool> listAddedCond = new List<bool>();
 
@@ -110,6 +115,8 @@ public class RocketTrigger : MonoBehaviour
             {
                 StartCoroutine(changeMaterial(renderer,green,runningTime));
 
+                audio.PlayOneShot(positive[Random.Range(0,positive.Count)]);
+
                 for (int i = 0; i < data.score; i++)
                 {
                     addCondom();
@@ -119,6 +126,8 @@ public class RocketTrigger : MonoBehaviour
             else
             {
                 StartCoroutine(changeMaterial(renderer, red, runningTime));
+
+                audio.PlayOneShot(negative[Random.Range(0, negative.Count)]);
 
                 for (int i = 0; i < -data.score; i++)
                 {

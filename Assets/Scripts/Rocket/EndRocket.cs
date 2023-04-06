@@ -8,6 +8,10 @@ using UnityEngine.UIElements;
 
 public class EndRocket : MonoBehaviour
 {
+    private AudioSource audio;
+    private AudioClip winMenuClip;
+    private AudioClip resumeMenuClip;
+
     public float speedForward = 20f;
     public float speedRight = 40;
 
@@ -39,6 +43,11 @@ public class EndRocket : MonoBehaviour
         winMenu = GameObject.FindWithTag("UI").transform.Find("WinMenu").gameObject;
         score = GameObject.FindWithTag("UI").transform.Find("WinMenu").GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
         winner = GameObject.FindWithTag("UI").transform.Find("WinMenu").GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+
+        GameObject manager = GameObject.FindWithTag("Manager");
+        audio = manager.GetComponent<HolderMusic>().audio;
+        winMenuClip = manager.GetComponent<HolderMusic>().winMenuClip;
+        resumeMenuClip = manager.GetComponent<HolderMusic>().resumeMenuClip;
     }
     private void Start()
     {
@@ -72,10 +81,9 @@ public class EndRocket : MonoBehaviour
         if (rocketTrigger.condomsLen == 0) {
 
             winner.text = "";
-            score.text = "Score: " + rocketTrigger.score;
-            winMenu.SetActive(true);
+            setMenu();
 
-            yield  break;
+             yield  break;
         }
 
         rocketTrigger.removeCondom();
@@ -101,18 +109,30 @@ public class EndRocket : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         winner.text = "";
-        score.text = "Score: " + rocketTrigger.score;
-        winMenu.SetActive(true);
+        setMenu();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "EggCell")
         {
-            score.text = "Score: " + rocketTrigger.score;
-            winMenu.SetActive(true);
-
+            setMenu();
             StopCoroutine(moving);
+        }
+    }
+
+    private void setMenu()
+    {
+        score.text = "Score: " + rocketTrigger.score;
+        winMenu.SetActive(true);
+
+        if (winner.text.Length != 0)
+        {
+            audio.PlayOneShot(winMenuClip);
+        }
+        else
+        {
+            audio.PlayOneShot(resumeMenuClip);
         }
     }
 }
