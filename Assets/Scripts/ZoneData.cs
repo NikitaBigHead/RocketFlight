@@ -33,7 +33,7 @@ public class ZoneData:MonoBehaviour
 
         this.score = isTrue ? score : -score;
 
-        scores.text = "+-" +Mathf.Abs(score);
+        scores.text = Mathf.Abs(score).ToString();
     }
 
 }

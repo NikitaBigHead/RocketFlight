@@ -198,6 +198,7 @@ MonoBehaviour:
   textEquation: {fileID: 7107555627971478392}
   textRight: {fileID: 7107555628631062706}
   textWrong: {fileID: 7107555627521568700}
+  scores: {fileID: 0}
   equation: 
   isTrue: 1
   score: 1
@@ -714,7 +715,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 08bf8672dbe86404e8b85c4e132df049, type: 2}
+  - {fileID: 2100000, guid: 66eecfef2906f98469e599c3ed85cde0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

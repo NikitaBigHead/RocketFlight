@@ -7,6 +7,9 @@ TagManager:
   - Ground
   - Zone
   - EggCell
+  - Debug
+  - UI
+  - Manager
   layers:
   - Default
   - TransparentFX

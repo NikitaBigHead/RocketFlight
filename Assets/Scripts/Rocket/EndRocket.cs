@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -23,25 +24,32 @@ public class EndRocket : MonoBehaviour
     private RocketTrigger rocketTrigger;
 
     private float finalBeginZ;
-    private float distBetweenPoints = 4f;
+    private float distBetweenPoints = 3.989f;
 
+    private Coroutine moving;
+
+    private GameObject winMenu;
+    private TextMeshProUGUI score;
+    private TextMeshProUGUI winner;
     private void Awake()
     {
         rocketTrigger = GetComponent<RocketTrigger>();
         finalBeginZ = GameObject.FindWithTag("Finish").transform.position.z;
+
+        winMenu = GameObject.FindWithTag("UI").transform.Find("WinMenu").gameObject;
+        score = GameObject.FindWithTag("UI").transform.Find("WinMenu").GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        winner = GameObject.FindWithTag("UI").transform.Find("WinMenu").GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
     }
     private void Start()
     {
-        //Camera.main.transform.localPosition = camPos;
-        //Camera.main.transform.localRotation = Quaternion.Euler(camRot);
-
-        StartCoroutine(transformCamera());
-        StartCoroutine(moveRocket());
-
         symbol = transform.position.x / Mathf.Abs(transform.position.x);
         symbol = -symbol;
 
         right = symbol * speedRight * Time.fixedDeltaTime;
+
+        StartCoroutine(transformCamera());
+        moving = StartCoroutine(moveRocket());
+
     }
     IEnumerator transformCamera()
     {
@@ -61,9 +69,17 @@ public class EndRocket : MonoBehaviour
     IEnumerator moveRocket()
     {
         float currentPosZ = finalBeginZ;
-        rocketTrigger.removeCondom();
+        if (rocketTrigger.condomsLen == 0) {
 
-        Debug.Log(rocketTrigger.condomsLen);
+            winner.text = "";
+            score.text = "Score: " + rocketTrigger.score;
+            winMenu.SetActive(true);
+
+            yield  break;
+        }
+
+        rocketTrigger.removeCondom();
+        
 
         while (rocketTrigger.condomsLen != 0)
         {
@@ -73,20 +89,30 @@ public class EndRocket : MonoBehaviour
             Vector3 translation = new Vector3(right, 0, speedForward) * Time.fixedDeltaTime;
             transform.Translate(translation);
 
-            if (transform.position.z >= currentPosZ + distBetweenPoints)
+            if (transform.position.z >= (currentPosZ + distBetweenPoints))
             {
-                currentPosZ = transform.position.z;
+                //currentPosZ = transform.position.z;
+                currentPosZ = currentPosZ + distBetweenPoints;
                 rocketTrigger.removeCondom();
             }
             yield return new WaitForFixedUpdate();
         }
+
+        yield return new WaitForSeconds(0.5f);
+
+        winner.text = "";
+        score.text = "Score: " + rocketTrigger.score;
+        winMenu.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "EggCell")
         {
-            StopCoroutine(moveRocket());
+            score.text = "Score: " + rocketTrigger.score;
+            winMenu.SetActive(true);
+
+            StopCoroutine(moving);
         }
     }
 }

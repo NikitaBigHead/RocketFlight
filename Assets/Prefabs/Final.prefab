@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1263031810171899523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4660297529655238335}
+  m_Layer: 0
+  m_Name: StartLine
+  m_TagString: Finish
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4660297529655238335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263031810171899523}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.58, y: 0, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2353502548408766635}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2353502547683249369
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +145,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502547762999150
 RectTransform:
   m_ObjectHideFlags: 0
@@ -249,7 +280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502547937384796
 RectTransform:
   m_ObjectHideFlags: 0
@@ -384,7 +415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502547958311306
 RectTransform:
   m_ObjectHideFlags: 0
@@ -616,7 +647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502548057234814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1042,7 +1073,7 @@ GameObject:
   - component: {fileID: 2353502548408766634}
   m_Layer: 0
   m_Name: Final
-  m_TagString: Finish
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1065,6 +1096,7 @@ Transform:
   - {fileID: 2353502548936603274}
   - {fileID: 2353502548253013099}
   - {fileID: 2353502549417073403}
+  - {fileID: 4660297529655238335}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1080,7 +1112,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 20.988937, y: 4.9018283, z: 1}
-  m_Center: {x: 0.03788185, y: 2.5, z: 0}
+  m_Center: {x: 0.03788185, y: 2.5, z: -0.58}
 --- !u!114 &2353502548408766634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,7 +1142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502548676665978
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1523,7 +1555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502549201880859
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1901,7 +1933,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "5\u2015\n4\u2015\n3\u2015\n2\u2015\n1\u2015"
+  m_text: "40 \u2015\r\n39 \u2015\r\n38 \u2015\r\n37 \u2015\r\n36 \u2015\r\n35 \u2015\r\n34
+    \u2015\r\n33 \u2015\r\n32 \u2015\r\n31 \u2015\r\n30 \u2015\r\n29 \u2015\r\n28
+    \u2015\r\n27 \u2015\r\n26 \u2015\r\n25 \u2015\r\n24 \u2015\r\n23 \u2015\r\n22
+    \u2015\r\n21 \u2015\r\n20 \u2015\r\n19 \u2015\r\n18 \u2015\r\n17 \u2015\r\n16
+    \u2015\r\n15 \u2015\r\n14 \u2015\r\n13 \u2015\r\n12 \u2015\r\n11 \u2015\r\n10
+    \u2015\r\n9 \u2015\r\n8 \u2015\r\n7 \u2015\r\n6 \u2015\r\n5 \u2015\r\n4 \u2015\r\n3
+    \u2015\r\n2 \u2015\r\n1 \u2015"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1964,7 +2002,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -6.9181795, z: 0, w: -2.9975548}
+  m_margin: {x: 0, y: -145.31241, z: 0, w: -2.9975548}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1987,7 +2025,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2353502549330547266
 RectTransform:
   m_ObjectHideFlags: 0

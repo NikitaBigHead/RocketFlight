@@ -1,4 +1,3 @@
-using OpenCover.Framework.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,34 +13,34 @@ public class GeneratingZones : MonoBehaviour
     public float distance = 7f;
     public int countZone = 50;
 
-    [Header("�������� ��������� ��� � �� ����������� ����������� ������")]
+    [Header("Проценты, влияющие на зоны")]
     [Range(0,100)]   public float percentOfDoubleZone = 50f;
     [Range(0, 100)]  public float percentOfDoubleZoneCorrect = 50f;
     [Range(0, 100)]  public float percentOfZoneCorrect = 50f;
 
-    [Header("������������ ���������� ���������")]
+    [Header("Максимальное смещение ответа")]
     public int MaxOffsetUncorrectEquation = 3;
 
-    [Header("������� ���")]
+    [Header("Префабы зон")]
     public GameObject prefabZone;
     public GameObject prefabDoubleZone;
 
-    [Header("�����")]
+    [Header("Финиш")]
     public GameObject finishPrefab;
 
-    [Header("���")]
+    [Header("Пол")]
     public GameObject plane;
 
-    [Header("������� ��������� ������������ ���")]
+    [Header("Смещения для правильного расположения зон")]
     public float ZoneCordX = 5f;
     public float ZoneCordY = 2.5f;
 
-    [Header("����� � �����������")]
+    [Header("Текстовые файлы с уравнениями")]
     public TextAsset hardEquationsText;
     public TextAsset simpleEquationsText;
 
-    [Header("����")]
-    public int scoreForHard = 1;
+    [Header("Очки за зону")]
+    public int scoreForHard = 2;
     public int scoreForSimple = 1;
 
     private List<string> hardEquations = new List<string>();
@@ -54,12 +53,11 @@ public class GeneratingZones : MonoBehaviour
     private void Awake()
     {
 
-        //string parentDir = Directory.GetCurrentDirectory();
-        //string dir = parentDir.ToString() + "/Assets/Equations/HardEquations.txt";
-        //equations = File.ReadAllLines(dir);
+        readList(hardEquationsText,ref hardEquations);
+        readList(simpleEquationsText,ref simpleEquations);
 
-        getList(hardEquationsText,ref hardEquations);
-        getList(simpleEquationsText,ref simpleEquations);
+        hardEquations.Sort((x, y) => Random.Range(-1, 2));
+        simpleEquations.Sort((x, y) => Random.Range(-1, 2));
 
         hardEquationsWithAnswers = new string[hardEquations.Count,2];
         SimpleEquationsWithAnswers = new string[simpleEquations.Count,2];
@@ -77,7 +75,11 @@ public class GeneratingZones : MonoBehaviour
         float lenZones = flat.childCount * flat.GetChild(0).transform.localScale.z;
         newPos.z += lenZones;
 
-        plane.transform.localScale = new Vector3(plane.transform.localScale.x, plane.transform.localScale.y, newPos.z  * 5f);
+        Vector3 newPlanePos = new Vector3(0, 0, newPos.z) / 5;
+        newPlanePos.z += 35f;
+        plane.transform.position = newPlanePos;
+        
+        plane.transform.localScale = new Vector3(plane.transform.localScale.x, plane.transform.localScale.y, newPos.z  / 5f);
 
 
     }
@@ -97,9 +99,12 @@ public class GeneratingZones : MonoBehaviour
                 int index = Random.Range(0, simpleEquations.Count);
 
                 string result = SimpleEquationsWithAnswers[index, 1];
-                if (!isTrue)
-                    result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
+                if (result.Length == 0) continue;
 
+                if (!isTrue)
+
+                        result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
+                    
                 string equation = SimpleEquationsWithAnswers[index, 0] + " = " + result;
 
                 zone.launch(equation, isTrue, scoreForSimple);
@@ -114,9 +119,13 @@ public class GeneratingZones : MonoBehaviour
                 bool isTrue = random(percentOfZoneCorrect);
 
                 int index = Random.Range(0, hardEquations.Count);
+
                 string result = hardEquationsWithAnswers[index, 1];
+                if (result.Length == 0) continue;
+
                 if (!isTrue)
-                    result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
+
+                        result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
 
                 string equation = hardEquationsWithAnswers[index, 0] + " = " + result;
 
@@ -127,7 +136,7 @@ public class GeneratingZones : MonoBehaviour
             newPos.z += distance;
         }
     }
-    private void getList(TextAsset EquationsText,ref List<string> equations) {
+    private void readList(TextAsset EquationsText,ref List<string> equations) {
         string str = EquationsText.ToString();
         string raw = "";
         for (int i = 0; i < str.Length; i++)
