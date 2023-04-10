@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Move : MonoBehaviour
@@ -10,7 +11,8 @@ public class Move : MonoBehaviour
     public float speedRight = 1.0f;
 
     //private Rigidbody rigidbody;
-    private float dirRight;
+    [HideInInspector]
+    public float dirRight;
 
     private float groundScale;
 
@@ -19,7 +21,8 @@ public class Move : MonoBehaviour
     private int countZone;
     private float distanceBetweenZones;
 
-    private int count = 0;
+    [Header("количество пройденых зон")]
+    public int count = 0;
 
     private void Awake()
     {
@@ -62,19 +65,21 @@ public class Move : MonoBehaviour
                 count += 1;
             }
             
-            scoreText.text = string.Format("{0}/{1}", count, countZone);
+            scoreText.text = string.Format("distance\n{0}/{1}", count, countZone);
             yield return new WaitForFixedUpdate();
         }
     }
     private void Update()
     {
+#if DEBUG
         dirRight = Input.GetAxis("Horizontal");
-
+#endif
     }
+
+ 
     private void FixedUpdate()
     {
        
-
         float right = dirRight * speedRight;
      
         Vector3 translation = new Vector3(right, 0, speedForward) * Time.fixedDeltaTime;
@@ -82,6 +87,6 @@ public class Move : MonoBehaviour
         if (Math.Abs(transform.position.x) >= groundScale)
             transform.position = new Vector3(transform.position.x - translation.x , transform.position.y , transform.position.z);
     }
-    
-    
+
+
 }

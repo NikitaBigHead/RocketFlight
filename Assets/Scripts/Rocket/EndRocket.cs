@@ -22,8 +22,8 @@ public class EndRocket : MonoBehaviour
     private float right;
     private float symbol;
 
-    private Vector3 camRot = new Vector3(50f,0f,0f);
-    private Vector3 camPos = new Vector3(0,6.4f,-4.7f);
+    private Vector3 camRot = new Vector3(54.195f, 0f,0f);
+    private Vector3 camPos = new Vector3(0, 7.65f, -6.96f);
 
     private RocketTrigger rocketTrigger;
 
@@ -63,8 +63,10 @@ public class EndRocket : MonoBehaviour
     IEnumerator transformCamera()
     {
 
-        while (Camera.main.transform.localPosition - camPos!= Vector3.zero &&
-            Camera.main.transform.localRotation.ToEuler() - camRot != Vector3.zero)
+        //while (Camera.main.transform.localPosition - camPos!= Vector3.zero &&
+        //    Camera.main.transform.localRotation.ToEuler() - camRot != Vector3.zero)
+        while(Vector3.Dot(Camera.main.transform.localPosition.normalized , camPos.normalized) < (1 - 0.00001f) &&
+            (Camera.main.transform.localRotation.ToEuler() - camRot != Vector3.zero ))
         {
             Camera.main.transform.localPosition 
                 = Vector3.Lerp(Camera.main.transform.localPosition, camPos, Time.fixedDeltaTime * speedTransfromCamera );
@@ -86,7 +88,7 @@ public class EndRocket : MonoBehaviour
              yield  break;
         }
 
-        rocketTrigger.removeCondom();
+        rocketTrigger.removeCondomInFinal();
         
 
         while (rocketTrigger.condomsLen != 0)
@@ -101,7 +103,7 @@ public class EndRocket : MonoBehaviour
             {
                 //currentPosZ = transform.position.z;
                 currentPosZ = currentPosZ + distBetweenPoints;
-                rocketTrigger.removeCondom();
+                rocketTrigger.removeCondomInFinal();
             }
             yield return new WaitForFixedUpdate();
         }

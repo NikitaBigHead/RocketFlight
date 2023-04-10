@@ -14,10 +14,12 @@ public class Final : MonoBehaviour
         if(other.tag == "Player")
         {
             Destroy( other.gameObject.GetComponent<Move>());
+
             other.gameObject.AddComponent<EndRocket>();
 
             if (PlayerPrefs.GetInt("HighScore") < rocketTrigger.score)
                 PlayerPrefs.SetInt("HighScore", rocketTrigger.score);
+
         }
 
         

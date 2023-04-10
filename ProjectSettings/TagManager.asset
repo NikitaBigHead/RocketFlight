@@ -10,6 +10,7 @@ TagManager:
   - Debug
   - UI
   - Manager
+  - AreaZone
   layers:
   - Default
   - TransparentFX

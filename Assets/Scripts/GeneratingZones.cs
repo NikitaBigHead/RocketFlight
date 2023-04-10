@@ -9,14 +9,15 @@ using Random = UnityEngine.Random;
 
 public class GeneratingZones : MonoBehaviour
 {
-    [Space]
+    [Header("Параметры зон")]
     public float distance = 7f;
     public int countZone = 50;
+    public int dynamicZoneCount = 6;
 
     [Header("Проценты, влияющие на зоны")]
-    [Range(0,100)]   public float percentOfDoubleZone = 50f;
-    [Range(0, 100)]  public float percentOfDoubleZoneCorrect = 50f;
-    [Range(0, 100)]  public float percentOfZoneCorrect = 50f;
+    [Range(0, 100)] public float percentOfDoubleZone = 50f;
+    [Range(0, 100)] public float percentOfDoubleZoneCorrect = 50f;
+    [Range(0, 100)] public float percentOfZoneCorrect = 50f;
 
     [Header("Максимальное смещение ответа")]
     public int MaxOffsetUncorrectEquation = 3;
@@ -49,92 +50,100 @@ public class GeneratingZones : MonoBehaviour
     private string[,] hardEquationsWithAnswers;
     private string[,] SimpleEquationsWithAnswers;
 
+    private Vector3 newPosForEnd = Vector3.zero;
+    private Vector3 newPos = Vector3.zero;
 
     private void Awake()
     {
 
-        readList(hardEquationsText,ref hardEquations);
-        readList(simpleEquationsText,ref simpleEquations);
+        readList(hardEquationsText, ref hardEquations);
+        readList(simpleEquationsText, ref simpleEquations);
 
         hardEquations.Sort((x, y) => Random.Range(-1, 2));
         simpleEquations.Sort((x, y) => Random.Range(-1, 2));
 
-        hardEquationsWithAnswers = new string[hardEquations.Count,2];
-        SimpleEquationsWithAnswers = new string[simpleEquations.Count,2];
+        hardEquationsWithAnswers = new string[hardEquations.Count, 2];
+        SimpleEquationsWithAnswers = new string[simpleEquations.Count, 2];
 
-        setDoubleArray(hardEquations,ref hardEquationsWithAnswers);
+        setDoubleArray(hardEquations, ref hardEquationsWithAnswers);
         setDoubleArray(simpleEquations, ref SimpleEquationsWithAnswers);
 
-        Vector3 newPos = new Vector3(0,0,0);
-        generateZones(ref newPos);
+        for (int i = 0; i < dynamicZoneCount; i++)
+        {
+            generateZone();
+        }
+        newPosForEnd.z += (distance * countZone);
 
-        newPos.z += distance;
-        Instantiate(finishPrefab,newPos,Quaternion.identity);
-
+        generateFinish();
+        
         Transform flat = finishPrefab.transform.Find("Flats");
         float lenZones = flat.childCount * flat.GetChild(0).transform.localScale.z;
-        newPos.z += lenZones;
+        newPosForEnd.z += lenZones;
 
-        Vector3 newPlanePos = new Vector3(0, 0, newPos.z) / 5;
+        Vector3 newPlanePos = new Vector3(0, 0, newPosForEnd.z) / 5;
         newPlanePos.z += 35f;
         plane.transform.position = newPlanePos;
-        
-        plane.transform.localScale = new Vector3(plane.transform.localScale.x, plane.transform.localScale.y, newPos.z  / 5f);
+
+        plane.transform.localScale = new Vector3(plane.transform.localScale.x, plane.transform.localScale.y, newPosForEnd.z / 5f);
 
 
     }
-    private void generateZones(ref Vector3 newPos)
+    
+    public void generateZone()
     {
-        for (int i = 0; i < countZone; i++)
+        bool isDoubleZone = random(percentOfDoubleZone);
+
+
+        if (isDoubleZone)
         {
-            bool isDoubleZone = random(percentOfDoubleZone);
+            TransferToZoneData zone = Instantiate(prefabDoubleZone, newPos, Quaternion.identity).GetComponent<TransferToZoneData>();
 
+            bool isTrue = random(percentOfDoubleZoneCorrect);
 
-            if (isDoubleZone)
-            {
-                TransferToZoneData zone = Instantiate(prefabDoubleZone, newPos, Quaternion.identity).GetComponent<TransferToZoneData>();
+            int index = Random.Range(0, simpleEquations.Count);
 
-                bool isTrue = random(percentOfDoubleZoneCorrect);
+            string result = SimpleEquationsWithAnswers[index, 1];
+            if (result.Length == 0) return;
 
-                int index = Random.Range(0, simpleEquations.Count);
+            if (!isTrue)
 
-                string result = SimpleEquationsWithAnswers[index, 1];
-                if (result.Length == 0) continue;
+                result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
 
-                if (!isTrue)
+            string equation = SimpleEquationsWithAnswers[index, 0] + " = " + result;
 
-                        result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
-                    
-                string equation = SimpleEquationsWithAnswers[index, 0] + " = " + result;
-
-                zone.launch(equation, isTrue, scoreForSimple);
-            }
-            else
-            {
-                bool isRight = random(50f);
-                int oper = isRight ? 1 : -1;
-                ZoneData zone = Instantiate(prefabZone, new Vector3(oper * ZoneCordX, ZoneCordY, newPos.z), Quaternion.identity)
-                    .GetComponent<ZoneData>();
-
-                bool isTrue = random(percentOfZoneCorrect);
-
-                int index = Random.Range(0, hardEquations.Count);
-
-                string result = hardEquationsWithAnswers[index, 1];
-                if (result.Length == 0) continue;
-
-                if (!isTrue)
-
-                        result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
-
-                string equation = hardEquationsWithAnswers[index, 0] + " = " + result;
-
-                zone.launch(equation, isTrue, scoreForHard);
-
-            }
-
-            newPos.z += distance;
+            zone.launch(equation, isTrue, scoreForSimple);
         }
+        else
+        {
+            bool isRight = random(50f);
+            int oper = isRight ? 1 : -1;
+            ZoneData zone = Instantiate(prefabZone, new Vector3(oper * ZoneCordX, ZoneCordY, newPos.z), Quaternion.identity)
+                .GetComponent<ZoneData>();
+
+            bool isTrue = random(percentOfZoneCorrect);
+
+            int index = Random.Range(0, hardEquations.Count);
+
+            string result = hardEquationsWithAnswers[index, 1];
+            if (result.Length == 0) return;
+
+            if (!isTrue)
+
+                result = (Convert.ToInt32(result) + Random.Range(1, MaxOffsetUncorrectEquation)).ToString();
+
+            string equation = hardEquationsWithAnswers[index, 0] + " = " + result;
+
+            zone.launch(equation, isTrue, scoreForHard);
+
+        }
+        newPos.z += distance;
+
+
+    }
+    private void generateFinish()
+    {
+        newPosForEnd.z += distance;
+        Instantiate(finishPrefab, newPosForEnd, Quaternion.identity);
     }
     private void readList(TextAsset EquationsText,ref List<string> equations) {
         string str = EquationsText.ToString();

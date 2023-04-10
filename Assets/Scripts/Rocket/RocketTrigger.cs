@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RocketTrigger : MonoBehaviour
 {
@@ -34,8 +37,11 @@ public class RocketTrigger : MonoBehaviour
     private Vector3 beginVolume;
 
     private int numMaterial;
+    private int aMaterial = 170;
 
     private Stack<GameObject> condoms = new Stack<GameObject>();
+
+    private GeneratingZones generatingZones;
 
     public int condomsLen
     {
@@ -49,6 +55,7 @@ public class RocketTrigger : MonoBehaviour
     {
         beginVolume = condomPrefab.transform.localScale;
         playerMove = GetComponent<Move>();
+        generatingZones = GameObject.FindWithTag("Manager").GetComponent<GeneratingZones>();
     }
     public void addCondom()
     {
@@ -58,8 +65,7 @@ public class RocketTrigger : MonoBehaviour
         beginVolume = new Vector3(beginVolume.x + DistanceCondoms, beginVolume.y + DistanceCondoms, beginVolume.z);
         condom.transform.localScale = beginVolume;
 
-        Camera.main.transform.localPosition = 
-            new Vector3(Camera.main.transform.localPosition.x, Camera.main.transform.localPosition.y + DistanceCondoms * 0.3f, Camera.main.transform.localPosition.z);
+        StartCoroutine(moveCamera(1));
 
         Renderer renderer = condom.GetComponent<Renderer>();
         renderer.material = materials[numMaterial];
@@ -67,6 +73,10 @@ public class RocketTrigger : MonoBehaviour
 
         numMaterial++;
 
+
+        if(condoms.Count!=0)
+            channgeColor(255);
+        
         condoms.Push(condom);
         if (numMaterial == materials.Count || numMaterial < 0)
                numMaterial = 0;
@@ -77,13 +87,32 @@ public class RocketTrigger : MonoBehaviour
         {
             beginVolume = new Vector3(beginVolume.x - DistanceCondoms, beginVolume.y - DistanceCondoms, beginVolume.z);
 
-            Camera.main.transform.localPosition =
-           new Vector3(Camera.main.transform.localPosition.x, Camera.main.transform.localPosition.y - DistanceCondoms * 0.3f, Camera.main.transform.localPosition.z);
+            StartCoroutine(moveCamera(-1));
 
             Destroy(condoms.Pop());
+            
+            if(condoms.Count != 0)
+                channgeColor(170);
+            
             numMaterial--;
 
         }
+        if (numMaterial == materials.Count || numMaterial < 0)
+            numMaterial = 0;
+    }
+    public void removeCondomInFinal()
+    {
+
+            beginVolume = new Vector3(beginVolume.x - DistanceCondoms, beginVolume.y - DistanceCondoms, beginVolume.z);
+
+            Destroy(condoms.Pop());
+
+            if(condoms.Count != 0)
+                channgeColor(170);
+            
+            numMaterial--;
+
+        
         if (numMaterial == materials.Count || numMaterial < 0)
             numMaterial = 0;
     }
@@ -105,17 +134,17 @@ public class RocketTrigger : MonoBehaviour
             Renderer renderer = other.gameObject.GetComponentInChildren<Renderer>();
 
             score += data.score;
-            if (score <0)
+            if (score < 0)
             {
                 score = 0;
             }
-            
+
 
             if (data.isTrue)
             {
-                StartCoroutine(changeMaterial(renderer,green,runningTime));
+                StartCoroutine(changeMaterial(renderer, green, runningTime));
 
-                audio.PlayOneShot(positive[Random.Range(0,positive.Count)]);
+                audio.PlayOneShot(positive[Random.Range(0, positive.Count)]);
 
                 for (int i = 0; i < data.score; i++)
                 {
@@ -135,11 +164,32 @@ public class RocketTrigger : MonoBehaviour
                     addTolistCondoms(data.isTrue);
                 }
             }
-            //if (numMaterial == materials.Count || numMaterial < 0) 
-            //    numMaterial = 0;
+
+        }
+        if (other.tag == "AreaZone" && (playerMove.count < (generatingZones.countZone - generatingZones.dynamicZoneCount)))
+        {
+            generatingZones.generateZone();
+            StartCoroutine(destroyZone(other.gameObject.transform.parent.gameObject, 3f));
         }
     }
 
+    IEnumerator destroyZone(GameObject zone, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(zone);
+
+        try
+        {
+            Destroy(zone.transform.parent.gameObject);
+        }
+        catch(Exception ex){}
+    }
+
+    private void channgeColor(int a) {
+        Material material = condoms.Peek().GetComponent<Renderer>().material;
+        material.color = new Color(material.color.r, material.color.g, material.color.b, a);
+        condoms.Peek().GetComponent<Renderer>().material = material;
+    }
     private void addTolistCondoms(bool isTrue)
     {
         if (listAddedCond.Count != lenBuffer)
@@ -196,5 +246,17 @@ public class RocketTrigger : MonoBehaviour
             return;
         }
         playerMove.speedForward = playerSpeed + speed;
+    }
+
+    IEnumerator moveCamera(float smooth)
+    {
+        Vector3 camPos = new Vector3(Camera.main.transform.localPosition.x,
+            Camera.main.transform.localPosition.y + DistanceCondoms * smooth, Camera.main.transform.localPosition.z);
+        //while (Camera.main.transform.localPosition - camPos != Vector3.zero)
+        while (Vector3.Dot(Camera.main.transform.localPosition.normalized, camPos.normalized) < (1 - 0.00001f))
+        {
+            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,camPos,0.1f);
+            yield return new WaitForFixedUpdate();
+        }
     }
 }
